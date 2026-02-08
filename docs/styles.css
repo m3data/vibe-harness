@@ -839,8 +839,8 @@ footer {
   letter-spacing: 0.04em;
 }
 
-footer a { color: var(--dark-stone); }
-footer a:hover { color: var(--charcoal); }
+footer a { color: var(--dark-stone); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--rule-line); }
+footer a:hover { color: var(--charcoal); text-decoration-color: var(--ochre); }
 
 .footer-inner {
   max-width: 1080px;
