@@ -1,3 +1,45 @@
+/* ===== SELF-HOSTED FONTS ===== */
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('fonts/newsreader-variable.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('fonts/newsreader-variable-italic.woff2') format('woff2');
+  font-weight: 300 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/dm-mono-300.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/dm-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('fonts/dm-mono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -179,12 +221,13 @@ nav.scrolled {
   transform: translateY(-1px);
 }
 
+.hero-cta i,
 .hero-cta svg {
-  width: 14px;
-  height: 14px;
+  font-size: 14px;
   transition: transform 0.2s;
 }
 
+.hero-cta:hover i,
 .hero-cta:hover svg {
   transform: translateX(3px);
 }
@@ -641,9 +684,9 @@ nav.scrolled {
   transform: translateY(-1px);
 }
 
+.cta-button i,
 .cta-button svg {
-  width: 14px;
-  height: 14px;
+  font-size: 14px;
 }
 
 .cta-sub {
