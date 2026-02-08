@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Harness — AI that adjusts to you</title>
+<meta name="description" content="An open-source tool that adapts AI behaviour to match your working state. Not the other way around.">
+<meta property="og:title" content="Vibe Harness">
+<meta property="og:description" content="AI that adjusts to you, not the other way around.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream: #f5f0e8;
+  --warm-white: #faf8f4;
+  --ochre: #c4863b;
+  --ochre-dim: #a06e2e;
+  --deep-green: #2d4a3e;
+  --stone: #8b7e6a;
+  --stone-light: #b5a78f;
+  --charcoal: #2c2926;
+  --charcoal-soft: #4a4540;
+  --terracotta: #b85c3a;
+  --sage: #7a9183;
+  --sand: #e8dfd0;
+  --rule-line: #d4c9b5;
+}
+
+html {
+  font-size: 17px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: 'Newsreader', Georgia, serif;
+  background: var(--cream);
+  color: var(--charcoal);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.mono {
+  font-family: 'DM Mono', 'Courier New', monospace;
+}
+
+a { color: var(--ochre-dim); text-decoration: none; }
+a:hover { color: var(--terracotta); }
+
+/* ===== LAYOUT ===== */
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 5rem 0;
+}
+
+/* ===== NAV ===== */
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cream);
+  border-bottom: 1px solid var(--rule-line);
+  transition: box-shadow 0.3s ease;
+}
+
+nav.scrolled {
+  box-shadow: 0 2px 20px rgba(44, 41, 38, 0.06);
+}
+
+.nav-mark {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--stone);
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--charcoal); }
+
+/* ===== HERO ===== */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 6rem;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 720px;
+}
+
+.hero-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.2s forwards;
+}
+
+.hero h1 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.8rem;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.35s forwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--ochre-dim);
+}
+
+.hero-body {
+  font-size: 1.15rem;
+  color: var(--charcoal-soft);
+  max-width: 540px;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.5s forwards;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1.8rem;
+  background: var(--charcoal);
+  color: var(--cream);
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.15s;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.65s forwards;
+}
+
+.hero-cta:hover {
+  background: var(--deep-green);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
+.hero-cta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s;
+}
+
+.hero-cta:hover svg {
+  transform: translateX(3px);
+}
+
+.hero-aside {
+  position: absolute;
+  right: 2rem;
+  bottom: 3rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--stone-light);
+  writing-mode: vertical-rl;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeIn 0.6s ease 1s forwards;
+}
+
+/* ===== PREMISE ===== */
+
+.premise {
+  border-top: 1px solid var(--rule-line);
+  background: var(--warm-white);
+}
+
+.premise-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.premise-left h2 {
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.35;
+  margin-bottom: 1.2rem;
+}
+
+.premise-left p {
+  color: var(--charcoal-soft);
+  font-size: 1rem;
+}
+
+.premise-right {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.9;
+  color: var(--stone);
+  border-left: 2px solid var(--rule-line);
+  padding-left: 1.5rem;
+}
+
+.premise-right .highlight {
+  color: var(--charcoal);
+  font-weight: 500;
+}
+
+/* ===== MODES ===== */
+
+.modes {
+  border-top: 1px solid var(--rule-line);
+}
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 0.8rem;
+}
+
+.modes h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  max-width: 480px;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule-line);
+}
+
+.mode-card {
+  padding: 1.8rem 1.4rem;
+  border-right: 1px solid var(--rule-line);
+  position: relative;
+  transition: background 0.3s ease;
+  cursor: default;
+}
+
+.mode-card:last-child { border-right: none; }
+
+.mode-card:hover {
+  background: var(--warm-white);
+}
+
+.mode-card::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-bottom: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.mode-card:hover::before { transform: scale(1.4); }
+
+.mode-card:nth-child(1)::before { background: var(--sage); }
+.mode-card:nth-child(2)::before { background: var(--ochre); }
+.mode-card:nth-child(3)::before { background: var(--deep-green); }
+.mode-card:nth-child(4)::before { background: var(--terracotta); }
+.mode-card:nth-child(5)::before { background: var(--stone-light); }
+
+.mode-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.7rem;
+  color: var(--charcoal);
+}
+
+.mode-desc {
+  font-size: 0.88rem;
+  color: var(--charcoal-soft);
+  line-height: 1.55;
+}
+
+/* ===== FRICTION MATRIX ===== */
+
+.friction {
+  border-top: 1px solid var(--rule-line);
+  background: var(--warm-white);
+}
+
+.friction h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.friction > .container > p {
+  color: var(--charcoal-soft);
+  max-width: 560px;
+  margin-bottom: 3rem;
+}
+
+.matrix-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 2rem;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: 100px repeat(5, 1fr);
+  grid-template-rows: auto repeat(5, 1fr);
+  gap: 0;
+  min-width: 560px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  border: 1px solid var(--rule-line);
+}
+
+.matrix-header {
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--stone);
+  border-bottom: 1px solid var(--rule-line);
+  border-right: 1px solid var(--rule-line);
+  background: var(--cream);
+}
+
+.matrix-header:last-child { border-right: none; }
+
+.matrix-corner {
+  border-bottom: 1px solid var(--rule-line);
+  border-right: 1px solid var(--rule-line);
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--stone-light);
+}
+
+.matrix-row-label {
+  padding: 0.7rem 0.5rem;
+  font-weight: 500;
+  color: var(--stone);
+  border-right: 1px solid var(--rule-line);
+  border-bottom: 1px solid var(--rule-line);
+  display: flex;
+  align-items: center;
+  background: var(--cream);
+}
+
+.matrix-cell {
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  border-right: 1px solid var(--rule-line);
+  border-bottom: 1px solid var(--rule-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.matrix-cell:nth-child(6n) { border-right: none; }
+.matrix-row-label:last-of-type,
+.matrix-cell:nth-last-child(-n+5) { border-bottom: none; }
+
+.matrix-cell.f-none { color: var(--sage); }
+.matrix-cell.f-medium { color: var(--ochre); }
+.matrix-cell.f-high { color: var(--terracotta); font-weight: 500; }
+.matrix-cell.f-self { color: var(--stone-light); }
+
+.matrix-cell.f-high:hover {
+  background: rgba(184, 92, 58, 0.06);
+}
+
+.friction-legend {
+  display: flex;
+  gap: 2rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--stone);
+}
+
+.friction-legend span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.none { background: var(--sage); }
+.legend-dot.medium { background: var(--ochre); }
+.legend-dot.high { background: var(--terracotta); }
+
+/* ===== GOVERNANCE ===== */
+
+.governance {
+  border-top: 1px solid var(--rule-line);
+}
+
+.governance h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.governance > .container > p {
+  color: var(--charcoal-soft);
+  max-width: 560px;
+  margin-bottom: 3rem;
+}
+
+.gov-rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--rule-line);
+}
+
+.gov-rule {
+  padding: 1.5rem;
+  border-right: 1px solid var(--rule-line);
+  border-bottom: 1px solid var(--rule-line);
+  position: relative;
+}
+
+.gov-rule:nth-child(2n) { border-right: none; }
+.gov-rule:nth-last-child(-n+2) { border-bottom: none; }
+
+.gov-rule-priority {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--stone-light);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.gov-rule-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--charcoal);
+}
+
+.gov-rule-desc {
+  font-size: 0.85rem;
+  color: var(--charcoal-soft);
+  line-height: 1.5;
+}
+
+.gov-principle {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border-left: 3px solid var(--ochre);
+  background: var(--warm-white);
+}
+
+.gov-principle p {
+  font-style: italic;
+  color: var(--charcoal-soft);
+  font-size: 1rem;
+}
+
+/* ===== LAYERS ===== */
+
+.layers {
+  border-top: 1px solid var(--rule-line);
+  background: var(--warm-white);
+}
+
+.layers h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.layer-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 1px solid var(--rule-line);
+  max-width: 640px;
+}
+
+.layer-item {
+  padding: 1.5rem 1.8rem;
+  border-bottom: 1px solid var(--rule-line);
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  gap: 1.2rem;
+  align-items: start;
+  position: relative;
+}
+
+.layer-item:last-child { border-bottom: none; }
+
+.layer-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--stone-light);
+  line-height: 1;
+  padding-top: 0.15rem;
+}
+
+.layer-item.active .layer-num {
+  color: var(--ochre);
+}
+
+.layer-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: var(--charcoal);
+}
+
+.layer-body {
+  font-size: 0.88rem;
+  color: var(--charcoal-soft);
+  line-height: 1.5;
+}
+
+.layer-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  white-space: nowrap;
+  align-self: start;
+  margin-top: 0.15rem;
+}
+
+.layer-status.available {
+  background: var(--deep-green);
+  color: var(--cream);
+}
+
+.layer-status.designed {
+  background: var(--sand);
+  color: var(--stone);
+}
+
+.layer-status.future {
+  background: transparent;
+  color: var(--stone-light);
+  border: 1px solid var(--rule-line);
+}
+
+/* ===== CTA ===== */
+
+.cta-section {
+  border-top: 1px solid var(--rule-line);
+  text-align: center;
+  padding: 5rem 0;
+}
+
+.cta-section h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  color: var(--charcoal-soft);
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 2rem;
+  background: var(--charcoal);
+  color: var(--cream);
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.15s;
+}
+
+.cta-button:hover {
+  background: var(--deep-green);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
+.cta-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.cta-sub {
+  margin-top: 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--stone-light);
+  letter-spacing: 0.04em;
+}
+
+/* ===== FOOTER ===== */
+
+footer {
+  border-top: 1px solid var(--rule-line);
+  padding: 2.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--stone);
+  letter-spacing: 0.04em;
+}
+
+footer a { color: var(--stone); }
+footer a:hover { color: var(--charcoal); }
+
+.footer-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-right {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+  .mode-grid {
+    grid-template-columns: 1fr;
+  }
+  .mode-card {
+    border-right: none;
+    border-bottom: 1px solid var(--rule-line);
+  }
+  .mode-card:last-child { border-bottom: none; }
+
+  .gov-rules {
+    grid-template-columns: 1fr;
+  }
+  .gov-rule { border-right: none; }
+  .gov-rule:nth-child(2n) { border-bottom: 1px solid var(--rule-line); }
+  .gov-rule:last-child { border-bottom: none; }
+
+  .premise-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  html { font-size: 15px; }
+  section { padding: 3.5rem 0; }
+
+  .hero-aside { display: none; }
+  .nav-links { gap: 1rem; }
+
+  .layer-item {
+    grid-template-columns: 2rem 1fr;
+    gap: 0.8rem;
+  }
+  .layer-status {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .friction-legend {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: center;
+  }
+
+  .footer-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <span class="nav-mark">Vibe Harness</span>
+  <ul class="nav-links">
+    <li><a href="#modes">Modes</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#layers">Layers</a></li>
+    <li><a href="https://github.com/m3data/vibe-harness-mcp">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="hero-label">Open-source &middot; MCP Server &middot; Layer 1 available now</p>
+      <h1>AI tools optimise for output.<br>This one <em>listens</em> to you.</h1>
+      <p class="hero-body">Vibe Harness adjusts AI behaviour to match your working state. Five modes, transition friction, defeasible governance. Your nervous system sets the tempo.</p>
+      <a href="https://github.com/m3data/vibe-harness-mcp" class="hero-cta">
+        Get the MCP server
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <span class="hero-aside">Somatic-first design</span>
+  </div>
+</section>
+
+<!-- Premise -->
+<section class="premise">
+  <div class="container">
+    <div class="premise-grid">
+      <div class="premise-left">
+        <h2>Most AI tools assume you're a stable system. You're not. Nobody is.</h2>
+        <p>Your capacity shifts across a working session. Early on you're divergent, exploratory. Mid-session you're building. Late in the day you're trying to ship or you need to stop. The AI doesn't know any of this. It gives you the same energy at hour four that it gave at minute one.</p>
+      </div>
+      <div class="premise-right">
+        <span class="highlight">The inversion:</span><br>
+        Instead of optimising AI output<br>
+        and hoping the human keeps up,<br><br>
+        <span class="highlight">adapt the AI's behaviour</span><br>
+        to where the human actually is.<br><br>
+        Mode by mode.<br>
+        Transition by transition.<br>
+        With friction where friction belongs.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modes -->
+<section class="modes reveal" id="modes">
+  <div class="container">
+    <p class="section-label">Five modes</p>
+    <h2>Name where you are. The AI adjusts.</h2>
+    <div class="mode-grid">
+      <div class="mode-card">
+        <div class="mode-name">Explore</div>
+        <div class="mode-desc">Open, divergent. Follow threads. Let things be ambiguous for a while.</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-name">Build</div>
+        <div class="mode-desc">Concise, code-first. Make reasonable defaults instead of asking. Show the thing.</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-name">Think-with</div>
+        <div class="mode-desc">Reflective. Hold complexity without collapsing it. Match the human's pace.</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-name">Ship</div>
+        <div class="mode-desc">Decisive. Catch scope creep. No new ideas — finish what's in front of you.</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-name">Cool-off</div>
+        <div class="mode-desc">Minimal output. Wind down. The session is ending and that's fine.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Friction Matrix -->
+<section class="friction reveal" id="how-it-works">
+  <div class="container">
+    <p class="section-label">Transition friction</p>
+    <h2>Not all mode switches are equal.</h2>
+    <p>Jumping from explore straight to ship skips the metabolic work of building and testing. The system makes you confirm that leap. Stepping back from build to explore gets an acknowledgment, not a wall. Cooling off is always free.</p>
+
+    <div class="matrix-wrap">
+      <div class="matrix">
+        <div class="matrix-corner">from &darr; &ensp; to &rarr;</div>
+        <div class="matrix-header">Explore</div>
+        <div class="matrix-header">Build</div>
+        <div class="matrix-header">Think</div>
+        <div class="matrix-header">Ship</div>
+        <div class="matrix-header">Cool-off</div>
+
+        <div class="matrix-row-label">Explore</div>
+        <div class="matrix-cell f-self">&mdash;</div>
+        <div class="matrix-cell f-none">none</div>
+        <div class="matrix-cell f-none">none</div>
+        <div class="matrix-cell f-high">high</div>
+        <div class="matrix-cell f-none">none</div>
+
+        <div class="matrix-row-label">Build</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-self">&mdash;</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-none">none</div>
+        <div class="matrix-cell f-none">none</div>
+
+        <div class="matrix-row-label">Think</div>
+        <div class="matrix-cell f-none">none</div>
+        <div class="matrix-cell f-none">none</div>
+        <div class="matrix-cell f-self">&mdash;</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-none">none</div>
+
+        <div class="matrix-row-label">Ship</div>
+        <div class="matrix-cell f-high">high</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-self">&mdash;</div>
+        <div class="matrix-cell f-none">none</div>
+
+        <div class="matrix-row-label">Cool-off</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-medium">med</div>
+        <div class="matrix-cell f-high">high</div>
+        <div class="matrix-cell f-self">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="friction-legend">
+      <span><span class="legend-dot none"></span> Free — natural progression</span>
+      <span><span class="legend-dot medium"></span> Medium — acknowledged, allowed</span>
+      <span><span class="legend-dot high"></span> High — requires double confirmation</span>
+    </div>
+  </div>
+</section>
+
+<!-- Governance -->
+<section class="governance reveal">
+  <div class="container">
+    <p class="section-label">Defeasible governance</p>
+    <h2>Rules that can yield.</h2>
+    <p>Governance rules can be overridden by higher-priority rules. This is by design. Silent overrides are invisible governance. Explicit defeasibility means you can see why a nudge did or didn't appear. Every evaluation is traced.</p>
+
+    <div class="gov-rules">
+      <div class="gov-rule">
+        <div class="gov-rule-priority">Priority 1</div>
+        <div class="gov-rule-name">Cooldown suppression</div>
+        <div class="gov-rule-desc">Maximum one nudge per 15 minutes. Defeated by nothing. The system doesn't nag.</div>
+      </div>
+      <div class="gov-rule">
+        <div class="gov-rule-priority">Priority 2</div>
+        <div class="gov-rule-name">Session duration</div>
+        <div class="gov-rule-desc">After 120 minutes, suggest cooling off. Your nervous system has limits even when your deadline doesn't.</div>
+      </div>
+      <div class="gov-rule">
+        <div class="gov-rule-priority">Priority 3</div>
+        <div class="gov-rule-name">Mode duration</div>
+        <div class="gov-rule-desc">45 minutes in one mode triggers a mode-specific check-in. Exploration without building is avoidance. Building without pausing is grinding.</div>
+      </div>
+      <div class="gov-rule">
+        <div class="gov-rule-priority">Priority 4 &amp; 5</div>
+        <div class="gov-rule-name">Drift &amp; interaction count</div>
+        <div class="gov-rule-desc">Exploring with high interactions? You might be building without naming it. 100+ actions without a mode switch? Time to check in.</div>
+      </div>
+    </div>
+
+    <div class="gov-principle">
+      <p>Pull-only. The system surfaces nudges when asked. It never interrupts. You call <span class="mono">vibe_check()</span> or <span class="mono">vibe_nudge()</span> when you want to know. The locus of control stays with you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Layers -->
+<section class="layers reveal" id="layers">
+  <div class="container">
+    <p class="section-label">Roadmap</p>
+    <h2>Three layers, built incrementally.</h2>
+
+    <div class="layer-stack">
+      <div class="layer-item active">
+        <div class="layer-num">1</div>
+        <div>
+          <div class="layer-title">Working modes</div>
+          <div class="layer-body">Manual mode switching with research-informed presets. Defeasible governance. Transition friction. Session export with full governance trace. Ships as an MCP server for Claude Code.</div>
+        </div>
+        <span class="layer-status available">Available</span>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num">2</div>
+        <div>
+          <div class="layer-title">Biosignal integration</div>
+          <div class="layer-body">Polar H10 BLE heart rate variability. The governor reads your body, not just your clicks. HRV coherence informs nudge timing. Somatic data stays local.</div>
+        </div>
+        <span class="layer-status designed">Designed</span>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num">3</div>
+        <div>
+          <div class="layer-title">Full coupling loop</div>
+          <div class="layer-body">Semantic coupling analysis from conversation history. Biosignal + semantic + session patterns feeding the governor. The full instrument.</div>
+        </div>
+        <span class="layer-status future">Future</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <div class="container">
+    <h2>Try it.</h2>
+    <p>Layer 1 is available now as an MCP server. Install it, name your mode, and see what happens when the AI actually listens.</p>
+    <a href="https://github.com/m3data/vibe-harness-mcp" class="cta-button">
+      View on GitHub
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    </a>
+    <p class="cta-sub">MCP server &middot; stdio transport &middot; works with Claude Code</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <span>&copy; 2026 <a href="https://github.com/m3data">Mat Mytka</a></span>
+    <div class="footer-right">
+      <a href="https://github.com/m3data/vibe-harness-mcp">MCP Server</a>
+      <span>Earthian Stewardship License (ESL-A)</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll shadow
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
