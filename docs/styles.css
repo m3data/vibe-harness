@@ -56,6 +56,11 @@
   --sage: #7a9183;
   --sand: #e8dfd0;
   --rule-line: #d4c9b5;
+
+  /* Cybernetic secondary */
+  --teal: #4a8e8b;
+  --teal-dim: #3a7570;
+  --teal-glow: rgba(74, 142, 139, 0.08);
 }
 
 html {
@@ -99,6 +104,33 @@ a:hover { color: var(--terracotta); }
 
 section {
   padding: 5rem 0;
+  position: relative;
+}
+
+/* Gradient section dividers */
+.premise,
+.modes,
+.friction,
+.governance,
+.layers,
+.cta-section {
+  border-top: none;
+}
+
+.premise::before,
+.modes::before,
+.friction::before,
+.governance::before,
+.layers::before,
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rule-line) 0%, var(--ochre) 35%, var(--teal) 65%, var(--rule-line) 100%);
+  opacity: 0.5;
 }
 
 /* ===== NAV ===== */
@@ -144,9 +176,24 @@ nav.scrolled {
   text-transform: uppercase;
   color: var(--stone);
   transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--ochre), var(--teal));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
 }
 
 .nav-links a:hover { color: var(--charcoal); }
+.nav-links a:hover::after { transform: scaleX(1); }
 
 /* ===== HERO ===== */
 
@@ -156,10 +203,13 @@ nav.scrolled {
   align-items: center;
   padding-top: 6rem;
   position: relative;
+  overflow: hidden;
 }
 
 .hero-content {
   max-width: 720px;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-label {
@@ -206,19 +256,20 @@ nav.scrolled {
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   padding: 0.85rem 1.8rem;
-  background: var(--charcoal);
+  background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-green) 100%);
   color: var(--cream);
   border: none;
   cursor: pointer;
-  transition: background 0.25s, transform 0.15s;
+  transition: background 0.25s, transform 0.15s, box-shadow 0.3s;
   opacity: 0;
   animation: fadeUp 0.6s ease 0.65s forwards;
 }
 
 .hero-cta:hover {
-  background: var(--deep-green);
+  background: linear-gradient(135deg, var(--deep-green) 0%, var(--teal-dim) 100%);
   color: var(--cream);
   transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(74, 142, 139, 0.15);
 }
 
 .hero-cta i,
@@ -244,12 +295,59 @@ nav.scrolled {
   text-transform: uppercase;
   opacity: 0;
   animation: fadeIn 0.6s ease 1s forwards;
+  z-index: 2;
+}
+
+/* Hero waves — coherence animation */
+.hero-waves {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 25%;
+  bottom: 10%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: fadeIn 2s ease 1s forwards;
+}
+
+.hero-waves svg {
+  width: 200%;
+  height: 100%;
+  animation: waveScroll 25s linear infinite;
+}
+
+@keyframes waveScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-waves svg { animation: none; }
+}
+
+/* Hero decoration — concentric circles */
+.hero-decoration {
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 460px;
+  height: 460px;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 1.5s ease 0.8s forwards;
+}
+
+.hero-decoration svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* ===== PREMISE ===== */
 
 .premise {
-  border-top: 1px solid var(--rule-line);
   background: var(--warm-white);
 }
 
@@ -277,8 +375,19 @@ nav.scrolled {
   font-size: 0.78rem;
   line-height: 1.9;
   color: var(--stone);
-  border-left: 2px solid var(--rule-line);
   padding-left: 1.5rem;
+  position: relative;
+}
+
+/* Gradient left border */
+.premise-right::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--ochre), var(--teal));
 }
 
 .premise-right .highlight {
@@ -286,20 +395,18 @@ nav.scrolled {
   font-weight: 500;
 }
 
-/* ===== MODES ===== */
-
-.modes {
-  border-top: 1px solid var(--rule-line);
-}
+/* ===== SECTION LABEL (shared) ===== */
 
 .section-label {
   font-family: 'DM Mono', monospace;
   font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--stone);
+  color: var(--teal);
   margin-bottom: 0.8rem;
 }
+
+/* ===== MODES ===== */
 
 .modes h2 {
   font-weight: 400;
@@ -329,23 +436,41 @@ nav.scrolled {
   background: var(--warm-white);
 }
 
-.mode-card::before {
+/* Gradient top-border reveal on hover */
+.mode-card::after {
   content: '';
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-bottom: 1.2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ochre), var(--teal));
+  transform: scaleX(0);
+  transform-origin: left;
   transition: transform 0.3s ease;
 }
 
-.mode-card:hover::before { transform: scale(1.4); }
+.mode-card:hover::after {
+  transform: scaleX(1);
+}
 
-.mode-card:nth-child(1)::before { background: var(--sage); }
-.mode-card:nth-child(2)::before { background: var(--ochre); }
-.mode-card:nth-child(3)::before { background: var(--deep-green); }
-.mode-card:nth-child(4)::before { background: var(--terracotta); }
-.mode-card:nth-child(5)::before { background: var(--stone-light); }
+/* Mode icons */
+.mode-icon {
+  display: block;
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.mode-card:hover .mode-icon {
+  transform: scale(1.15);
+}
+
+.mode-card:nth-child(1) .mode-icon { color: var(--sage); }
+.mode-card:nth-child(2) .mode-icon { color: var(--ochre); }
+.mode-card:nth-child(3) .mode-icon { color: var(--deep-green); }
+.mode-card:nth-child(4) .mode-icon { color: var(--terracotta); }
+.mode-card:nth-child(5) .mode-icon { color: var(--stone-light); }
 
 .mode-name {
   font-family: 'DM Mono', monospace;
@@ -365,7 +490,6 @@ nav.scrolled {
 /* ===== FRICTION MATRIX ===== */
 
 .friction {
-  border-top: 1px solid var(--rule-line);
   background: var(--warm-white);
 }
 
@@ -449,13 +573,17 @@ nav.scrolled {
 .matrix-row-label:last-of-type,
 .matrix-cell:nth-last-child(-n+5) { border-bottom: none; }
 
-.matrix-cell.f-none { color: var(--sage); }
+.matrix-cell.f-none { color: var(--teal); }
 .matrix-cell.f-medium { color: var(--ochre); }
 .matrix-cell.f-high { color: var(--terracotta); font-weight: 500; }
 .matrix-cell.f-self { color: var(--stone-light); }
 
 .matrix-cell.f-high:hover {
   background: rgba(184, 92, 58, 0.06);
+}
+
+.matrix-cell.f-none:hover {
+  background: rgba(74, 142, 139, 0.04);
 }
 
 .friction-legend {
@@ -479,15 +607,11 @@ nav.scrolled {
   display: inline-block;
 }
 
-.legend-dot.none { background: var(--sage); }
+.legend-dot.none { background: var(--teal); }
 .legend-dot.medium { background: var(--ochre); }
 .legend-dot.high { background: var(--terracotta); }
 
 /* ===== GOVERNANCE ===== */
-
-.governance {
-  border-top: 1px solid var(--rule-line);
-}
 
 .governance h2 {
   font-weight: 400;
@@ -513,10 +637,27 @@ nav.scrolled {
   border-right: 1px solid var(--rule-line);
   border-bottom: 1px solid var(--rule-line);
   position: relative;
+  transition: background 0.3s ease;
+}
+
+.gov-rule:hover {
+  background: var(--warm-white);
 }
 
 .gov-rule:nth-child(2n) { border-right: none; }
 .gov-rule:nth-last-child(-n+2) { border-bottom: none; }
+
+.gov-rule-icon {
+  display: block;
+  font-size: 1.3rem;
+  color: var(--teal);
+  margin-bottom: 0.6rem;
+  transition: transform 0.3s ease;
+}
+
+.gov-rule:hover .gov-rule-icon {
+  transform: scale(1.1);
+}
 
 .gov-rule-priority {
   font-family: 'DM Mono', monospace;
@@ -544,8 +685,20 @@ nav.scrolled {
 .gov-principle {
   margin-top: 2.5rem;
   padding: 1.5rem;
-  border-left: 3px solid var(--ochre);
+  padding-left: calc(1.5rem + 3px);
   background: var(--warm-white);
+  position: relative;
+}
+
+/* Gradient left border */
+.gov-principle::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--ochre), var(--teal));
 }
 
 .gov-principle p {
@@ -557,7 +710,6 @@ nav.scrolled {
 /* ===== LAYERS ===== */
 
 .layers {
-  border-top: 1px solid var(--rule-line);
   background: var(--warm-white);
 }
 
@@ -608,6 +760,16 @@ nav.scrolled {
   color: var(--charcoal);
 }
 
+.layer-title i {
+  color: var(--teal);
+  margin-right: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.layer-item.active .layer-title i {
+  color: var(--ochre);
+}
+
 .layer-body {
   font-size: 0.88rem;
   color: var(--charcoal-soft);
@@ -626,7 +788,7 @@ nav.scrolled {
 }
 
 .layer-status.available {
-  background: var(--deep-green);
+  background: linear-gradient(135deg, var(--deep-green), var(--teal-dim));
   color: var(--cream);
 }
 
@@ -644,7 +806,6 @@ nav.scrolled {
 /* ===== CTA ===== */
 
 .cta-section {
-  border-top: 1px solid var(--rule-line);
   text-align: center;
   padding: 5rem 0;
 }
@@ -671,17 +832,18 @@ nav.scrolled {
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   padding: 0.85rem 2rem;
-  background: var(--charcoal);
+  background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-green) 100%);
   color: var(--cream);
   border: none;
   cursor: pointer;
-  transition: background 0.25s, transform 0.15s;
+  transition: background 0.25s, transform 0.15s, box-shadow 0.3s;
 }
 
 .cta-button:hover {
-  background: var(--deep-green);
+  background: linear-gradient(135deg, var(--deep-green) 0%, var(--teal-dim) 100%);
   color: var(--cream);
   transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(74, 142, 139, 0.15);
 }
 
 .cta-button i,
@@ -764,6 +926,12 @@ footer a:hover { color: var(--charcoal); }
   }
   .mode-card:last-child { border-bottom: none; }
 
+  .mode-card::after {
+    top: auto;
+    bottom: 0;
+    height: 2px;
+  }
+
   .gov-rules {
     grid-template-columns: 1fr;
   }
@@ -775,6 +943,14 @@ footer a:hover { color: var(--charcoal); }
     grid-template-columns: 1fr;
     gap: 2rem;
   }
+
+  .hero-decoration {
+    width: 300px;
+    height: 300px;
+    right: -5%;
+    opacity: 0;
+    animation: fadeIn 1.5s ease 0.8s forwards;
+  }
 }
 
 @media (max-width: 600px) {
@@ -782,6 +958,8 @@ footer a:hover { color: var(--charcoal); }
   section { padding: 3.5rem 0; }
 
   .hero-aside { display: none; }
+  .hero-decoration { display: none; }
+  .hero-waves { display: none; }
   .nav-links { gap: 1rem; }
 
   .layer-item {

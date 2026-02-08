@@ -8,6 +8,7 @@
 <meta property="og:title" content="Vibe Harness">
 <meta property="og:description" content="AI that adjusts to you, not the other way around.">
 <meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="vendor/phosphor/phosphor.css">
 </head>
@@ -37,6 +38,28 @@
       </a>
     </div>
     <span class="hero-aside">Somatic-first design</span>
+  </div>
+  <div class="hero-waves">
+    <svg viewBox="0 0 2400 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 C100,80 200,80 300,120 C400,160 500,160 600,120 C700,80 800,80 900,120 C1000,160 1100,160 1200,120 C1300,80 1400,80 1500,120 C1600,160 1700,160 1800,120 C1900,80 2000,80 2100,120 C2200,160 2300,160 2400,120"
+            stroke="rgba(74,142,139,0.04)" stroke-width="1.5" fill="none"/>
+      <path d="M0,100 C67,75 133,75 200,100 C267,125 333,125 400,100 C467,75 533,75 600,100 C667,125 733,125 800,100 C867,75 933,75 1000,100 C1067,125 1133,125 1200,100 C1267,75 1333,75 1400,100 C1467,125 1533,125 1600,100 C1667,75 1733,75 1800,100 C1867,125 1933,125 2000,100 C2067,75 2133,75 2200,100 C2267,125 2333,125 2400,100"
+            stroke="rgba(196,134,59,0.03)" stroke-width="1" fill="none"/>
+      <path d="M0,145 C50,133 100,133 150,145 C200,157 250,157 300,145 C350,133 400,133 450,145 C500,157 550,157 600,145 C650,133 700,133 750,145 C800,157 850,157 900,145 C950,133 1000,133 1050,145 C1100,157 1150,157 1200,145 C1250,133 1300,133 1350,145 C1400,157 1450,157 1500,145 C1550,133 1600,133 1650,145 C1700,157 1750,157 1800,145 C1850,133 1900,133 1950,145 C2000,157 2050,157 2100,145 C2150,133 2200,133 2250,145 C2300,157 2350,157 2400,145"
+            stroke="rgba(74,142,139,0.02)" stroke-width="0.75" fill="none"/>
+    </svg>
+  </div>
+  <div class="hero-decoration">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="190" stroke="rgba(74,142,139,0.08)" stroke-width="0.75"/>
+      <circle cx="200" cy="200" r="145" stroke="rgba(196,134,59,0.06)" stroke-width="0.75"/>
+      <circle cx="200" cy="200" r="100" stroke="rgba(74,142,139,0.06)" stroke-width="0.75"/>
+      <circle cx="200" cy="200" r="55" stroke="rgba(196,134,59,0.05)" stroke-width="0.75"/>
+      <circle cx="200" cy="10" r="2.5" fill="rgba(74,142,139,0.22)"/>
+      <circle cx="345" cy="200" r="2" fill="rgba(196,134,59,0.18)"/>
+      <circle cx="140" cy="340" r="2" fill="rgba(74,142,139,0.14)"/>
+      <circle cx="100" cy="130" r="1.5" fill="rgba(196,134,59,0.12)"/>
+    </svg>
   </div>
 </section>
 
@@ -69,22 +92,27 @@
     <h2>Name where you are. The AI adjusts.</h2>
     <div class="mode-grid">
       <div class="mode-card">
+        <i class="ph ph-compass mode-icon"></i>
         <div class="mode-name">Explore</div>
         <div class="mode-desc">Open, divergent. Follow threads. Let things be ambiguous for a while.</div>
       </div>
       <div class="mode-card">
+        <i class="ph ph-hammer mode-icon"></i>
         <div class="mode-name">Build</div>
         <div class="mode-desc">Concise, code-first. Make reasonable defaults instead of asking. Show the thing.</div>
       </div>
       <div class="mode-card">
+        <i class="ph ph-chat-circle-dots mode-icon"></i>
         <div class="mode-name">Think-with</div>
         <div class="mode-desc">Reflective. Hold complexity without collapsing it. Match the human's pace.</div>
       </div>
       <div class="mode-card">
+        <i class="ph ph-paper-plane-right mode-icon"></i>
         <div class="mode-name">Ship</div>
         <div class="mode-desc">Decisive. Catch scope creep. No new ideas — finish what's in front of you.</div>
       </div>
       <div class="mode-card">
+        <i class="ph ph-moon-stars mode-icon"></i>
         <div class="mode-name">Cool-off</div>
         <div class="mode-desc">Minimal output. Wind down. The session is ending and that's fine.</div>
       </div>
@@ -162,21 +190,25 @@
 
     <div class="gov-rules">
       <div class="gov-rule">
+        <i class="ph ph-clock-countdown gov-rule-icon"></i>
         <div class="gov-rule-priority">Priority 1</div>
         <div class="gov-rule-name">Cooldown suppression</div>
         <div class="gov-rule-desc">Maximum one nudge per 15 minutes. Defeated by nothing. The system doesn't nag.</div>
       </div>
       <div class="gov-rule">
+        <i class="ph ph-hourglass gov-rule-icon"></i>
         <div class="gov-rule-priority">Priority 2</div>
         <div class="gov-rule-name">Session duration</div>
         <div class="gov-rule-desc">After 120 minutes, suggest cooling off. Your nervous system has limits even when your deadline doesn't.</div>
       </div>
       <div class="gov-rule">
+        <i class="ph ph-arrows-clockwise gov-rule-icon"></i>
         <div class="gov-rule-priority">Priority 3</div>
         <div class="gov-rule-name">Mode duration</div>
         <div class="gov-rule-desc">45 minutes in one mode triggers a mode-specific check-in. Exploration without building is avoidance. Building without pausing is grinding.</div>
       </div>
       <div class="gov-rule">
+        <i class="ph ph-pulse gov-rule-icon"></i>
         <div class="gov-rule-priority">Priority 4 &amp; 5</div>
         <div class="gov-rule-name">Drift &amp; interaction count</div>
         <div class="gov-rule-desc">Exploring with high interactions? You might be building without naming it. 100+ actions without a mode switch? Time to check in.</div>
@@ -199,7 +231,7 @@
       <div class="layer-item active">
         <div class="layer-num">1</div>
         <div>
-          <div class="layer-title">Working modes</div>
+          <div class="layer-title"><i class="ph ph-sliders-horizontal"></i> Working modes</div>
           <div class="layer-body">Manual mode switching with research-informed presets. Defeasible governance. Transition friction. Session export with full governance trace. Ships as an MCP server for Claude Code.</div>
         </div>
         <span class="layer-status available">Available</span>
@@ -207,7 +239,7 @@
       <div class="layer-item">
         <div class="layer-num">2</div>
         <div>
-          <div class="layer-title">Biosignal integration</div>
+          <div class="layer-title"><i class="ph ph-heartbeat"></i> Biosignal integration</div>
           <div class="layer-body">Polar H10 BLE heart rate variability. The governor reads your body, not just your clicks. HRV coherence informs nudge timing. Somatic data stays local.</div>
         </div>
         <span class="layer-status designed">Designed</span>
@@ -215,7 +247,7 @@
       <div class="layer-item">
         <div class="layer-num">3</div>
         <div>
-          <div class="layer-title">Full coupling loop</div>
+          <div class="layer-title"><i class="ph ph-circles-three-plus"></i> Full coupling loop</div>
           <div class="layer-body">Semantic coupling analysis from conversation history. Biosignal + semantic + session patterns feeding the governor. The full instrument.</div>
         </div>
         <span class="layer-status future">Future</span>
