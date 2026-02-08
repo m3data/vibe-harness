@@ -661,27 +661,13 @@ nav.scrolled {
 
 .gov-principle {
   margin-top: 2.5rem;
-  padding: 1.5rem;
-  padding-left: calc(1.5rem + 3px);
-  background: var(--warm-white);
-  position: relative;
-}
-
-/* Gradient left border */
-.gov-principle::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(to bottom, var(--ochre), var(--teal));
 }
 
 .gov-principle p {
-  font-style: italic;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
   color: var(--charcoal-soft);
-  font-size: 1rem;
+  line-height: 1.6;
 }
 
 /* ===== LAYERS ===== */
