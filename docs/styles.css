@@ -880,8 +880,8 @@ nav.scrolled {
 }
 
 .install-copy.copied {
-  color: var(--teal);
-  border-color: var(--teal);
+  color: var(--sage);
+  border-color: var(--sage);
 }
 
 /* ===== FOOTER ===== */
