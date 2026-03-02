@@ -622,7 +622,8 @@ nav.scrolled {
 }
 
 .gov-rule:nth-child(2n) { border-right: none; }
-.gov-rule:nth-last-child(-n+2) { border-bottom: none; }
+.gov-rule:last-child { border-bottom: none; }
+.gov-rule:nth-last-child(2):nth-child(odd) { border-bottom: none; }
 .gov-rule:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: none; }
 
 .gov-rule-icon {
@@ -832,6 +833,9 @@ nav.scrolled {
   max-width: 720px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .install-block code {
@@ -840,6 +844,30 @@ nav.scrolled {
   color: var(--cream);
   white-space: nowrap;
   letter-spacing: 0.02em;
+  flex: 1;
+  min-width: 0;
+}
+
+.install-copy {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid rgba(245, 240, 232, 0.2);
+  color: var(--cream);
+  cursor: pointer;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.install-copy:hover {
+  border-color: rgba(245, 240, 232, 0.5);
+}
+
+.install-copy.copied {
+  color: var(--teal);
+  border-color: var(--teal);
 }
 
 /* ===== FOOTER ===== */

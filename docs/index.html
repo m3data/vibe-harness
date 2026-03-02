@@ -257,6 +257,9 @@
     <p>Layer 1 is available now as an MCP server. Install it, name your mode, and notice what shifts when you start paying attention to your own state.</p>
     <div class="install-block">
       <code>claude mcp add vibe-harness -- uvx --from "git+https://github.com/m3data/vibe-harness-mcp.git" vibe-harness-mcp</code>
+      <button class="install-copy" aria-label="Copy install command" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim()).then(()=>{this.classList.add('copied');this.querySelector('i').className='ph ph-check';setTimeout(()=>{this.classList.remove('copied');this.querySelector('i').className='ph ph-copy'},2000)})">
+        <i class="ph ph-copy"></i>
+      </button>
     </div>
     <a href="https://github.com/m3data/vibe-harness-mcp" class="cta-button">
       View on GitHub
