@@ -828,41 +828,55 @@ nav.scrolled {
 
 .install-block {
   background: var(--charcoal);
-  padding: 1rem 1.5rem;
   margin: 0 auto 2rem;
   max-width: 720px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+}
+
+.install-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.7rem 1.2rem;
+  border-bottom: 1px solid rgba(245, 240, 232, 0.1);
+}
+
+.install-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(245, 240, 232, 0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .install-block code {
+  display: block;
   font-family: 'DM Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--cream);
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
   letter-spacing: 0.02em;
-  flex: 1;
-  min-width: 0;
+  padding: 1rem 1.2rem;
+  line-height: 1.6;
 }
 
 .install-copy {
   flex-shrink: 0;
   background: none;
   border: 1px solid rgba(245, 240, 232, 0.2);
-  color: var(--cream);
+  color: rgba(245, 240, 232, 0.5);
   cursor: pointer;
-  padding: 0.4rem;
+  padding: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: border-color 0.2s, color 0.2s;
+  font-size: 1rem;
 }
 
 .install-copy:hover {
   border-color: rgba(245, 240, 232, 0.5);
+  color: var(--cream);
 }
 
 .install-copy.copied {
